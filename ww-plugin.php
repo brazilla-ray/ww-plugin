@@ -4,7 +4,7 @@
  */
 
 function ww_custom_post_artwork() {
-  register_post_type( 'artwork',
+  register_post_type( 'ww_artwork',
     array(
       'labels' => array(
         'name' => __( 'Artwork', 'textdomain' ),
