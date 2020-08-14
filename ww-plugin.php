@@ -13,7 +13,7 @@ function ww_custom_post_artwork() {
         'public'      => true,
         'has_archive' => true,
         'show_in_rest' => true,
-        'supports' => array( 'title', 'editor', 'custom-fields' ),
+        'supports' => array( 'title', 'editor', 'custom-fields', 'thumbnail' ),
         'rewrite'     => array( 'slug' => 'artwork' ),
         'description' => ( 'Custom post type for displaying artwork' ),
     )
