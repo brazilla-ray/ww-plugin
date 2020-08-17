@@ -7,7 +7,7 @@
  add_action( 'pre_get_posts', 'wwa_show_artwork_on_front_page' );
  function wwa_show_artwork_on_front_page( $query ) {
    if(
-     is_front_page( 'wwa_artwork' ) &&
+     is_front_page() &&
      empty( $query->query_vars['supress_filters'] ) &&
      $query->is_main_query()
    ) {
