@@ -3,20 +3,18 @@
  * Plugin Name: ww-plugin
  */
 
-function ww_custom_post_artwork() {
-  register_post_type( 'ww_artwork',
-    array(
-      'labels' => array(
-        'name' => __( 'Artwork', 'textdomain' ),
-        'singular_name' => __( 'Artwork', 'textdomain' ),
-      ),
-        'public'      => true,
-        'has_archive' => true,
-        'show_in_rest' => true,
-        'supports' => array( 'title', 'editor', 'custom-fields', 'thumbnail' ),
-        'rewrite'     => array( 'slug' => 'artwork' ),
-        'description' => ( 'Custom post type for displaying artwork' ),
-    )
-  );
-}
-add_action( 'init', 'ww_custom_post_artwork' );
+ // Modify query to show wwa_artwork on front page
+ add_action( 'pre_get_posts', 'wwa_show_artwork_on_front_page' );
+ function wwa_show_artwork_on_front_page( $query ) {
+   if(
+     is_front_page( 'wwa_artwork' ) &&
+     empty( $query->query_vars['supress_filters'] ) &&
+     $query->is_main_query()
+   ) {
+     $query->set( 'post_type', array(
+       'wwa_artwork'
+     ) );
+   }
+ }
+
+ 
