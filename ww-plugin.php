@@ -14,6 +14,9 @@
      $query->set( 'post_type', array(
        'wwa_artwork'
      ) );
+     $query->set( 'tag', array(
+       'recent'
+     ) );
    }
  }
 
