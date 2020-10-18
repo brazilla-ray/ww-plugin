@@ -3,6 +3,64 @@
  * Plugin Name: ww-plugin
  */
 
+if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+if( ! class_exists('WWAP') ) :
+class WWAP {
+
+	/** @var string The plugin version number. */
+  var $version = '1.0.0';
+  
+  /** @var array The plugin settings array. */
+	var $settings = array();
+	
+	/** @var array The plugin data array. */
+	var $data = array();
+	
+	/** @var array Storage for class instances. */
+	var $instances = array();
+	
+function initialize() {
+  // Define constants
+  $this->define( 'WWAP', true );
+  $this->define( 'WWAP_PATH', plugin_dir_path( __FILE__ ) );
+  $this->define( 'WWAP_BASENAME', plugin_basename( __FILE__ ) );
+  $this->define( 'WWAP_VERSION', $this->version );
+  $this->define( 'WWAP_MAJOR_VERSION', 1 );
+}
+
+function define( $name, $value = true ) {
+  if( !defined($name) ) {
+    define( $name, $value );
+  }
+}
+
+} // End class WWAP definition
+
+
+
+function wwap() {
+  global $wwap;
+
+  // Instantiate only once
+  if ( !isset($wwap) ) {
+    $wwap = new WWAP();
+    $wwap->initialize();
+  }
+  return $wwap;
+} 
+
+// Instantiate
+wwap();
+
+endif; // class_exists check
+
+  // Show which template file is being used
+ add_action( 'wp_footer', 'wwa_show_template_file' );
+ function wwa_show_template_file() {
+   global $template;
+   print_r( $template );
+ }
  // Modify query to show wwa_artwork on front page
  add_action( 'pre_get_posts', 'wwa_show_artwork_on_front_page' );
  function wwa_show_artwork_on_front_page( $query ) {
@@ -20,9 +78,4 @@
    }
  }
 
- // Show which template file is being used
- add_action( 'wp_footer', 'wwa_show_template_file' );
- function wwa_show_template_file() {
-   global $template;
-   print_r( $template );
- }
+ 
