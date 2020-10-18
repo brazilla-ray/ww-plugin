@@ -27,7 +27,13 @@ function initialize() {
   $this->define( 'WWAP_BASENAME', plugin_basename( __FILE__ ) );
   $this->define( 'WWAP_VERSION', $this->version );
   $this->define( 'WWAP_MAJOR_VERSION', 1 );
+  
+  // Include utility functions.
+  include_once( WWAP_PATH . 'includes/wwap-utility-functions.php');
+
+  wwap_include('includes/wwap-show-template-file.php');
 }
+
 
 function define( $name, $value = true ) {
   if( !defined($name) ) {
@@ -36,8 +42,6 @@ function define( $name, $value = true ) {
 }
 
 } // End class WWAP definition
-
-
 
 function wwap() {
   global $wwap;
@@ -55,12 +59,7 @@ wwap();
 
 endif; // class_exists check
 
-  // Show which template file is being used
- add_action( 'wp_footer', 'wwa_show_template_file' );
- function wwa_show_template_file() {
-   global $template;
-   print_r( $template );
- }
+ 
  // Modify query to show wwa_artwork on front page
  add_action( 'pre_get_posts', 'wwa_show_artwork_on_front_page' );
  function wwa_show_artwork_on_front_page( $query ) {
