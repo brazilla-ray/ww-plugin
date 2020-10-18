@@ -31,7 +31,11 @@ function initialize() {
   // Include utility functions.
   include_once( WWAP_PATH . 'includes/wwap-utility-functions.php');
 
-  wwap_include('includes/wwap-show-template-file.php');
+  // wwap_include('includes/wwap-show-template-file.php');
+  wwap_include('includes/wwap-show-artwork-on-front-page.php');
+  wwap_include('includes/wwap-setup-acf.php');
+  wwap_include('includes/wwap-setup-cptui-post-types.php');
+  wwap_include('includes/wwap-setup-cptui-taxonomies.php');
 }
 
 
@@ -58,23 +62,3 @@ function wwap() {
 wwap();
 
 endif; // class_exists check
-
- 
- // Modify query to show wwa_artwork on front page
- add_action( 'pre_get_posts', 'wwa_show_artwork_on_front_page' );
- function wwa_show_artwork_on_front_page( $query ) {
-   if(
-     is_front_page() &&
-     empty( $query->query_vars['supress_filters'] ) &&
-     $query->is_main_query()
-   ) {
-     $query->set( 'post_type', array(
-       'wwa_artwork'
-     ) );
-     $query->set( 'tag', array(
-       'recent'
-     ) );
-   }
- }
-
- 
