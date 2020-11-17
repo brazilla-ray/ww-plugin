@@ -17,4 +17,15 @@
    }
  }
 
- 
+ // Modify query to show all posts on a single page
+ add_action( 'pre_get_posts', 'wwa_all_posts_on_one_page' );
+ function wwa_all_posts_on_one_page( $query ) {
+   if(
+     ! is_admin() &&
+     $query->is_main_query()
+   ) {
+     $query->set( 'posts_per_page', -1 );
+    //  $query->set( 'orderby', 'rand');
+     return;
+   }
+ }

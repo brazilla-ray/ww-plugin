@@ -32,7 +32,7 @@ function initialize() {
   include_once( WWAP_PATH . 'includes/wwap-utility-functions.php');
 
   // wwap_include('includes/wwap-show-template-file.php');
-  wwap_include('includes/wwap-show-artwork-on-front-page.php');
+  wwap_include('includes/wwap-query-functions.php');
   wwap_include('includes/wwap-setup-acf.php');
   wwap_include('includes/wwap-setup-cptui-post-types.php');
   wwap_include('includes/wwap-setup-cptui-taxonomies.php');
