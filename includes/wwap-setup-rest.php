@@ -1,22 +1,18 @@
 <?php
+// https://dev.to/ninjasoards/easy-headless-wordpress-with-nuxt-netlify-5c4a
+// add ACF object to default posts endpoint
+add_filter('rest_prepare_post', 'acf_to_rest_api', 10, 3);
+// adds ACF object to wwa_artwork endpoint
+add_filter('rest_prepare_wwa_artwork', 'acf_to_rest_api', 10, 3);
+function acf_to_rest_api($response, $post, $request)
+{
+    if (!function_exists('get_fields')) {
+        return $response;
+    }
 
-add_action( 'rest_api_init', function() {
-  if ( ! function_exists( 'use_block_editor_for_post_type' ) ) {
-    require ABSPATH . 'wp-admin/includes/post.php';
+    if (isset($post)) {
+        $acf = get_fields($post->id);
+        $response->data['acf'] = $acf;
     }
-  $post_types = get_post_types_by_support( ['editor'] );
-  foreach ( $post_types as $post_type ) {
-    if ( use_block_editor_for_post_type( $post_type ) ) {
-      register_rest_field(
-        $post_type,
-        'blocks',
-        [
-          'get_callback' => function ( array $post ) {
-            return parse_blocks( $post['content']['raw'] );
-          },
-        ]
-        );
-      }
-    }
-  }
-);
+    return $response;
+}
