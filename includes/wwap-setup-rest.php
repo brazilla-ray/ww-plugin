@@ -75,6 +75,9 @@ class Wwap_Custom_Route extends WP_REST_Controller {
                 $post_data['image']['src'] = $img_src[0],
             );
         }
+        if ( isset( $schema['properties']['tags'] ) ) {
+            $post_data['tags'] = get_the_tags( $post );
+        }
 
         return rest_ensure_response( $post_data );
     }
@@ -145,6 +148,10 @@ class Wwap_Custom_Route extends WP_REST_Controller {
                     'type' => 'string',
                     'context' => array( 'view', 'edit', 'embed' ),
                     'readonly' => true,
+                ),
+                'tags' => array(
+                    'description' => esc_html__( 'Tags for the object image.', 'my-textdomain' ),
+                    'type' => 'integer',
                 ),
             ),
         );
