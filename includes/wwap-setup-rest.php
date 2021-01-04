@@ -41,7 +41,9 @@ class Wwap_Custom_Route extends WP_REST_Controller {
 
         $schema = $this->get_item_schema( $request );
 
-        $img_atts = wp_get_attachment_image_src( $post->image, 'full' );
+        $img_srcset = wp_get_attachment_image_srcset( $post->image, 'full' );
+        
+        $img_src = wp_get_attachment_image_src( $post->image, 'full' );
 
         if ( isset( $schema['properties']['id'] ) ) {
             $post_data['id'] = (int) $post->ID;
@@ -69,7 +71,8 @@ class Wwap_Custom_Route extends WP_REST_Controller {
         }
         if ( isset( $schema['properties']['acf_image'] ) ) {
             array(
-                $post_data['image'] = $img_atts[0],
+                $post_data['image']['srcset'] = $img_srcset,
+                $post_data['image']['src'] = $img_src[0],
             );
         }
 
@@ -139,7 +142,7 @@ class Wwap_Custom_Route extends WP_REST_Controller {
                 ),
                 'acf_image' => array(
                     'description' => esc_html__( 'Custom field from ACF for the object image.', 'my-textdomain' ),
-                    'type' => 'object',
+                    'type' => 'string',
                     'context' => array( 'view', 'edit', 'embed' ),
                     'readonly' => true,
                 ),
