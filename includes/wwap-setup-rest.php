@@ -12,12 +12,41 @@ class Wwap_Custom_Route extends WP_REST_Controller {
             ),
             'schema' => array( $this, 'get_item_schema' ),
         ) );
+        register_rest_route( $namespace, '/' . $base . '/recent', array(
+            array(
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => array( $this, 'get_recent_items' ),
+            ),
+            'schema' => array( $this, 'get_item_schema' ),
+        ) );
     }
 
     public function get_items( $request ) {
        $args = array(
            'posts_per_page' => 5,
            'post_type' => 'wwa_artwork',
+       );
+       $posts = get_posts( $args );
+
+       $data = array();
+
+       if ( empty( $posts ) ) {
+           return rest_ensure_response( $data );
+       }
+
+       foreach ( $posts as $post ) {
+           $response = $this->prepare_item_for_response( $post, $request );
+           $data[] = $this->prepare_response_for_collection( $response );
+       }
+
+       return rest_ensure_response( $data );
+    }
+
+    public function get_recent_items( $request ) {
+       $args = array(
+           'posts_per_page' => -1,
+           'post_type' => 'wwa_artwork',
+           'tag' => 'recent'
        );
        $posts = get_posts( $args );
 
