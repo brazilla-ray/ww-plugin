@@ -23,8 +23,11 @@ class Wwap_Custom_Route extends WP_REST_Controller {
 
     public function get_items( $request ) {
        $args = array(
-           'posts_per_page' => 5,
+           'posts_per_page' => -1,
            'post_type' => 'wwa_artwork',
+           'orderby' => 'title',
+           'order' => 'ASC',
+           'post_status' => 'published',
        );
        $posts = get_posts( $args );
 
