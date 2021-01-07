@@ -108,7 +108,7 @@ class Wwap_Custom_Route extends WP_REST_Controller {
             );
         }
         if ( isset( $schema['properties']['tags'] ) ) {
-            $post_data['tags'] = get_the_tags( $post );
+            $post_data['tag_slugs'] = wp_get_post_tags( $post->ID, array( 'fields' => 'slugs') );
         }
 
         return rest_ensure_response( $post_data );
