@@ -165,18 +165,6 @@ class Wwap_Custom_Route extends WP_REST_Controller {
                 'description' => esc_html__( 'Tags for the object image.', 'my-textdomain' ),
                     'type' => 'string',
                 ),
-                'tagSlugs' => array(
-                'description' => esc_html__( 'Tagslugs for the object image.', 'my-textdomain' ),
-                    'type' => 'string',
-                ),
-                'typeSlugs' => array(
-                'description' => esc_html__( 'Types for the object image.', 'my-textdomain' ),
-                    'type' => 'string',
-                ),
-                'sizeSlugs' => array(
-                'description' => esc_html__( 'Sizes for the object image.', 'my-textdomain' ),
-                    'type' => 'string',
-                ),
             ),
         );
 
