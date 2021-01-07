@@ -78,8 +78,24 @@ class Wwap_Custom_Route extends WP_REST_Controller {
                 $post_data['image']['src'] = $img_src[0],
             );
         }
-        if ( isset( $schema['properties']['tags'] ) ) {
+        if ( isset( $schema['properties']['tagSlugs'] ) ) {
             $post_data['tagSlugs'] = wp_get_post_tags( $post->ID, array( 'fields' => 'slugs') );
+        }
+        if ( isset( $schema['properties']['typeSlugs'] ) ) {
+            $terms = get_the_terms( $post->ID, 'wwa_type');
+            $wwa_types = array();
+            foreach ( $terms as $term ) {
+                $wwa_types[] = $term->slug;
+            }
+            $post_data['typeSlugs'] = $wwa_types;
+        }
+        if ( isset( $schema['properties']['sizeSlugs'] ) ) {
+            $terms = get_the_terms( $post->ID, 'wwa_size');
+            $wwa_sizes = array();
+            foreach ( $terms as $term ) {
+                $wwa_sizes[] = $term->slug;
+            }
+            $post_data['sizeSlugs'] = $wwa_sizes;
         }
 
         return rest_ensure_response( $post_data );
@@ -152,9 +168,17 @@ class Wwap_Custom_Route extends WP_REST_Controller {
                     'context' => array( 'view', 'edit', 'embed' ),
                     'readonly' => true,
                 ),
-                'tags' => array(
-                    'description' => esc_html__( 'Tags for the object image.', 'my-textdomain' ),
-                    'type' => 'integer',
+                'tagSlugs' => array(
+                'description' => esc_html__( 'Tags for the object image.', 'my-textdomain' ),
+                    'type' => 'string',
+                ),
+                'typeSlugs' => array(
+                'description' => esc_html__( 'Types for the object image.', 'my-textdomain' ),
+                    'type' => 'string',
+                ),
+                'sizeSlugs' => array(
+                'description' => esc_html__( 'Sizes for the object image.', 'my-textdomain' ),
+                    'type' => 'string',
                 ),
             ),
         );
