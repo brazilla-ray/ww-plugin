@@ -130,12 +130,17 @@ class Wwap_Custom_Route extends WP_REST_Controller {
         
         $wwap_tag_data = array();
 
-        $schema = $this->get_item_schema( $request );
+        $schema = $this->get_wwap_tags_schema( $request );
 
-        if ( isset( $schema['properties']['tags'] ) ) {
+        if ( isset( $schema['properties']['id'] ) ) {
             array(
-                $wwap_tag_data['tags']['id'] = $wwap_tag->term_id,
-                $wwap_tag_data['tags']['slug'] = $wwap_tag->slug,
+                $wwap_tag_data['id'] = $wwap_tag->term_id,
+            );
+        }
+
+        if ( isset( $schema['properties']['slug'] ) ) {
+            array(
+                $wwap_tag_data['slug'] = $wwap_tag->slug,
             );
         }
 
@@ -212,6 +217,35 @@ class Wwap_Custom_Route extends WP_REST_Controller {
                 'tags' => array(
                 'description' => esc_html__( 'Tags for the object image.', 'my-textdomain' ),
                     'type' => 'string',
+                ),
+
+            ),
+        );
+
+        return $this->schema;
+    }
+
+    public function get_wwap_tags_schema() {
+        if ( $this->schema ) {
+            return $this->schema;
+        }
+
+        $this->schema = array(
+            '$schema' => 'http://json-schema.org/draft-04/schema#',
+            'title' => 'wwap_tags',
+            'type' => 'object',
+            'properties' => array(
+                'id' => array(
+                'description' => esc_html__( 'Tag id.', 'my-textdomain' ),
+                    'type' => 'integer',
+                    'context' => array( 'view', 'edit', 'embed' ),
+                    'readonly' => true,
+                ),
+                'slug' => array(
+                'description' => esc_html__( 'Tag slug.', 'my-textdomain' ),
+                    'type' => 'string',
+                    'context' => array( 'view', 'edit', 'embed' ),
+                    'readonly' => true,
                 ),
             ),
         );
