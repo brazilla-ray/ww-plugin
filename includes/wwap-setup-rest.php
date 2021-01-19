@@ -5,12 +5,20 @@ class Wwap_Custom_Route extends WP_REST_Controller {
         $version = '1';
         $namespace = 'wwap/v' . $version;
         $base = 'artwork';
+        $child = 'tags';
         register_rest_route( $namespace, '/' . $base, array(
             array(
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => array( $this, 'get_items' ),
             ),
             'schema' => array( $this, 'get_item_schema' ),
+        ) );
+        register_rest_route( $namespace, '/' . $base . '/' . $child, array(
+            array(
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => array( $this, 'get_wwap_tags' ),
+            ),
+            'schema' => array( $this, 'get_wwap_tag_schema' ),
         ) );
     }
 
@@ -36,6 +44,30 @@ class Wwap_Custom_Route extends WP_REST_Controller {
        }
 
        return rest_ensure_response( $data );
+    }
+
+    public function get_wwap_tags( $request ) {
+        $args = array(
+            'taxonomy' => array(
+                'post_tag',
+                'wwa_type',
+                'wwa_size',
+            )
+        );
+        $wwap_tags = get_terms( $args );
+
+        $data = array();
+
+        if ( empty( $wwap_tags ) ) {
+            return rest_ensure_response( $data );
+        }
+
+        foreach ( $wwap_tags as $wwap_tag ) {
+            $response = $this->prepare_wwap_tag_for_response( $wwap_tag, $request );
+            $data[] = $this->prepare_response_for_collection( $response );
+        }
+
+        return rest_ensure_response( $data );
     }
 
     public function prepare_item_for_response( $post, $request ) {
@@ -79,19 +111,35 @@ class Wwap_Custom_Route extends WP_REST_Controller {
             );
         }
         if ( isset( $schema['properties']['tags'] ) ) {
-            $allTags = array();
             $terms = wp_get_post_terms( $post->ID, array(
                 'post_tag',
                 'wwa_type',
                 'wwa_size',
+            ), array(
+                'fields' => 'all'
             ) );
-            foreach ( $terms as $term ) {
-                $allTags[] = $term->slug;
-            }
-            $post_data['tags'] = $allTags;
+            array(
+                $post_data['tags'] = $terms,
+            );
         }
 
         return rest_ensure_response( $post_data );
+    }
+
+    public function prepare_wwap_tag_for_response( $wwap_tag, $request ) {
+        
+        $wwap_tag_data = array();
+
+        $schema = $this->get_item_schema( $request );
+
+        if ( isset( $schema['properties']['tags'] ) ) {
+            array(
+                $wwap_tag_data['tags']['id'] = $wwap_tag->term_id,
+                $wwap_tag_data['tags']['slug'] = $wwap_tag->slug,
+            );
+        }
+
+        return rest_ensure_response( $wwap_tag_data );
     }
 
     public function prepare_response_for_collection( $response ) {
